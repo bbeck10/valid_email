@@ -46,9 +46,10 @@ You can check if the email domain looks valid. This uses a regular expression so
 
 Alternatively, you can check if an email domain has a MX or A record by using `:mx_with_fallback` instead of `:mx`.
 
-You can detect disposable accounts
+You can detect disposable accounts or free email accounts:
 
-    validates :email, :email => {:ban_disposable_email => true, :message => I18n.t('validations.errors.models.user.invalid_email')}
+    * validates :email, :email => {:ban_disposable_email => true, :message => I18n.t('validations.errors.models.user.invalid_email')}
+    * validates :email, :email => {:ban_free_email => true, :message => I18n.t('validations.errors.models.user.invalid_email')}
 
 If you don't want the MX validator stuff, just require the right file
 
@@ -70,7 +71,7 @@ ValidateEmail.mx_valid_with_fallback?('email@randommail.com')
 ValidateEmail.valid?('email@randommail.com')
 ```
 
-Load it (and not the rails extensions) with 
+Load it (and not the rails extensions) with
 
     gem 'valid_email', require: 'valid_email/validate_email'
 

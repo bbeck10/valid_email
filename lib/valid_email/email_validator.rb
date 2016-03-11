@@ -20,9 +20,14 @@ class EmailValidator < ActiveModel::EachValidator
       require 'valid_email/ban_disposable_email_validator'
       r = BanDisposableEmailValidator.new(:attributes => attributes).validate(record)
     end
+    # Check if from free email provider
+    if r && options[:ban_free_email]
+      require 'valid_email/ban_free_email_validator'
+      r = BanFreeEmailValidator.new(:attributes => attributes).validate(record)
+    end
     unless r
       msg = (options[:message] || I18n.t(:invalid, :scope => "valid_email.validations.email"))
       record.errors.add attribute, (msg % {value: value})
-    end  
+    end
   end
 end

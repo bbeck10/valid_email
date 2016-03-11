@@ -118,5 +118,12 @@ class ValidateEmail
     rescue Mail::Field::ParseError
       false
     end
+
+    def ban_free_email?(value)
+      m = Mail::Address.new(value)
+      m.domain && !BanFreeEmailValidator.config.include?(m.domain)
+    rescue Mail::Field::ParseError
+      false
+    end
   end
 end

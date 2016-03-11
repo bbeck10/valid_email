@@ -25,6 +25,12 @@ describe EmailValidator do
     validates :email, :email => {:ban_disposable_email => true}
   end
 
+  person_class_free_email = Class.new do
+    include ActiveModel::Validations
+    attr_accessor :email
+    validates :email, :email => {:ban_free_email => true}
+  end
+
   person_class_nil_allowed = Class.new do
     include ActiveModel::Validations
     attr_accessor :email
@@ -209,6 +215,22 @@ describe EmailValidator do
 
       it "fails when email from disposable email services" do
         subject.email = 'john@grr.la'
+        expect(subject.valid?).to be_falsey
+        expect(subject.errors[:email]).to eq errors
+      end
+    end
+
+    describe "validating email from free service" do
+      subject { person_class_free_email.new }
+
+      it "passes when email from corporate email services" do
+        subject.email = 'john@verycorporate.com'
+        expect(subject.valid?).to be_truthy
+        expect(subject.errors[:email]).to be_empty
+      end
+
+      it "fails when email from free email services" do
+        subject.email = 'john@gmail.com'
         expect(subject.valid?).to be_falsey
         expect(subject.errors[:email]).to eq errors
       end
